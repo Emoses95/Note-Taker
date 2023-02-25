@@ -41,7 +41,7 @@ app.post("/api/notes", (req, res) => {
     res.json(textList);
 })
 
-//DELETE notes should be nearly identical to POST
+// Delete route
 app.delete('/api/notes/:id', (req, res) => {
     const uniqueID = req.params.id;
     fs.readFile('./db/db.json', 'utf-8', (err, data) => {

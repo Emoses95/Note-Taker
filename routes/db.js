@@ -27,4 +27,12 @@ db.post('/',(req,res)=>{
 
 
 })
+
+// GET Route for retrieving 
+db.get('/', (req, res) => {
+  readFromFile('./db/tips.json').then((data) => res.json(JSON.parse(data)));
+});
+
+
+
 module.exports= db;
