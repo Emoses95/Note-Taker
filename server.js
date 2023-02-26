@@ -1,61 +1,59 @@
 // Imported dependencies
-const express= require('express');
-const path= require('path');
-const fs= require('fs');
-const {v4: uuidv4}= require('uuid');
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
-const PORT= process.env.PORT || 3000
-const app= express();
+const PORT = process.env.PORT || 3000
+const app = express();
 
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
 // Get route for index.html
-app.get("/",(req,res)=>{
-    console.log(__dirname)
-    res.senfFile(path.join(_dirname,"public/index.html"))
+app.get("/", (req, res) => {
+  console.log(__dirname)
+  res.sendFile(path.join(__dirname, "public/index.html"))
 
 })
 // Get route index.html
-app.get("/notes",(req,res)=>{
-    res.sendFile(path.join(__dirname,'public/notes.html'))
+app.get("/notes", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/notes.html'))
 })
 
-// Get route for notes.html
-app.get('/api/notes', (req,res)=>{
-    res.sendFile(path.join(_dirname,"db/db.json"))
-})
+// GET route for notes.html
+app.get('/api/notes', (req, res) => {
+  const data = JSON.parse(fs.readFileSync('db.json'));
+  res.json(data);
+});
 
-// Get route for api/notes
-app.post("/api/notes", (req, res) => {
-    let newText= req.body;
-    let textList = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-    
-    newText.id = Math.floor(Math.random() * 10000);
-   
-    textList.push(newText);
-    fs.writeFileSync("./db/db.json", JSON.stringify(textList));
-    res.json(textList);
-})
+app.post('/api/notes', (req, res) => {
+  const newNote = req.body;
+  const id = uuidv4(); // Generate a unique ID for the new note
+  newNote.id = id; // Add the ID to the new note object
+  const db = require('./db.json');
+  db.push(newNote);
+  // Save the updated db.json file
+  fs.writeFileSync('./db.json', JSON.stringify(db));
+  res.status(201).json(newNote);
+});
 
 // Delete route
 app.delete('/api/notes/:id', (req, res) => {
-    const uniqueID = req.params.id;
-    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
-      if (err) {
-        console.log(err)
-      } 
-      const note= JSON.parse(data)
-      const filterNote= note.filter(function(note) {
-        return note.id !== uniqueID
-      })
-      fs.writeFile('./db/db.json', JSON.stringify(filterNote), err => console.log(err))
-    })
-    res.json({ok:true})
-  })
+  const id = req.params.id;
+  let notes = JSON.parse(fs.readFileSync('db.json', 'utf-8'));
+  const index = notes.findIndex(note => note.id === id);
+  if (index !== -1) {
+    notes.splice(index, 1);
+    fs.writeFileSync('db.json', JSON.stringify(notes));
+    res.status(200).json({ message: `Note with id ${id} deleted.` });
+  } else {
+    res.status(404).json({ message: `Note with id ${id} not found.` });
+  }
+});
 app.listen(PORT, () => {
-    console.log(`Server listening in on http://localhost:${PORT}`)
+  console.log(`Server listening in on http://localhost:${PORT}`)
 })
