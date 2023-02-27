@@ -12,9 +12,9 @@ None
 
 Application starts of rendering the homepage press Get Started bringing you to the Note Taker page where a user can add,save, or delete their notes.
 
-<image src=" Screenshot 2023-02-26 at 4.12.05 PM ">
+<image src=" Screenshot 2023-02-26 at 4.13.19 PM Small.png ">
   
-  <image src=" Screenshot 2023-02-26 at 4.13.19 PM ">
+  <image src="">
 
 ## Link
 
