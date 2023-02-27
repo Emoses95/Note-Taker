@@ -26,7 +26,7 @@ app.get("/notes", (req, res) => {
 
 // GET route for notes.html
 app.get('/api/notes', (req, res) => {
-  const data = JSON.parse(fs.readFileSync('db.json'));
+  const data = JSON.parse(fs.readFileSync('db/db.json'));
   res.json(data);
 });
 
@@ -44,11 +44,11 @@ app.post('/api/notes', (req, res) => {
 // Delete route
 app.delete('/api/notes/:id', (req, res) => {
   const id = req.params.id;
-  let notes = JSON.parse(fs.readFileSync('db.json', 'utf-8'));
+  let notes = JSON.parse(fs.readFileSync('./db/db.json', 'utf-8'));
   const index = notes.findIndex(note => note.id === id);
   if (index !== -1) {
     notes.splice(index, 1);
-    fs.writeFileSync('db.json', JSON.stringify(notes));
+    fs.writeFileSync('./db/db.json', JSON.stringify(notes));
     res.status(200).json({ message: `Note with id ${id} deleted.` });
   } else {
     res.status(404).json({ message: `Note with id ${id} not found.` });
