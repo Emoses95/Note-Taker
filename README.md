@@ -14,7 +14,7 @@ Application starts of rendering the homepage press Get Started bringing you to t
 
 <image src=" Screenshot 2023-02-26 at 4.13.19 PM Small.png ">
   
-  <image src="">
+  <image src="Screenshot 2023-02-26 at 4.12.05 PM Small.png ">
 
 ## Link
 
